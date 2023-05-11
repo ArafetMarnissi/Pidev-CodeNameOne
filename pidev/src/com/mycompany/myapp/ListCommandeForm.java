@@ -49,18 +49,40 @@ public class ListCommandeForm extends BaseForm{
     
     Form current;
     public ListCommandeForm(Resources res ) {
-          super("Newsfeed",BoxLayout.y()); 
+        super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
-        current = this ;
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Mes Commande");
+        setTitle("Mes Commandes");
         getContentPane().setScrollVisible(false);
         
+        super.addSideMenu(res);
         
-        tb.addSearchCommand(e ->  {
-            
+        
+        Button cartButton = new Button("");
+        cartButton.setUIID("NewsTopLine");
+        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+        cartStyle.setFgColor(0xf21f1f);
+        FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
+        tb.addCommandToRightBar("", cartIcon, e -> {
+            InfiniteProgress ip = new InfiniteProgress();
+            final Dialog ipDlg = ip.showInifiniteBlocking();
+        
+             PanierForm a = new PanierForm(res);
+             a.show();
+             refreshTheme();
         });
+        
+        //tb.addSearchCommand(e -> {});
+//        Button cartButton = new Button("");
+//        cartButton.setUIID("NewsTopLine");
+//        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+//        cartStyle.setFgColor(0xf21f1f);
+//        FontImage cartImage = FontImage.createMaterial(FontImage.MATERIAL_ADD_SHOPPING_CART, cartStyle);
+//        cartButton.setIcon(cartImage);
+//        cartButton.setTextPosition(Component.RIGHT);
+//        tb.addComponentToRightSideMenu(cartButton);
+
         
         Tabs swipe = new Tabs();
         
@@ -125,10 +147,8 @@ public class ListCommandeForm extends BaseForm{
         ButtonGroup barGroup = new ButtonGroup();
         RadioButton mesCommandes = RadioButton.createToggle("Mes Commandes", barGroup);
         mesCommandes.setUIID("SelectBar");
-        RadioButton Details = RadioButton.createToggle("Details", barGroup);
-        Details.setUIID("SelectBar");
-        RadioButton AjoutCommande = RadioButton.createToggle("Ajouter", barGroup);
-        AjoutCommande.setUIID("SelectBar");
+        RadioButton Panier = RadioButton.createToggle("Panier", barGroup);
+        Panier.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
 
 ///////////radio buuton pour afficher la liste des commandes
@@ -140,12 +160,12 @@ public class ListCommandeForm extends BaseForm{
             a.show();
             refreshTheme();
         });
-/////////radio buuton pour ajouter une commande
-        AjoutCommande.addActionListener((e) -> {
+        ////panier
+                Panier.addActionListener((e) -> {
                InfiniteProgress ip = new InfiniteProgress();
         final Dialog ipDlg = ip.showInifiniteBlocking();
         
-          AjoutCommandeForm a = new AjoutCommandeForm(res);
+          PanierForm a = new PanierForm(res);
             a.show();
             refreshTheme();
         });
@@ -153,7 +173,7 @@ public class ListCommandeForm extends BaseForm{
 
 
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(3, mesCommandes, Details, AjoutCommande),
+                GridLayout.encloseIn(2, mesCommandes, Panier ),
                 FlowLayout.encloseBottom(arrow)
         ));
 
@@ -164,8 +184,8 @@ public class ListCommandeForm extends BaseForm{
             updateArrowPosition(mesCommandes, arrow);
         });
         bindButtonSelection(mesCommandes, arrow);
-        bindButtonSelection(Details, arrow);
-        bindButtonSelection(AjoutCommande, arrow);
+
+
         
         addOrientationListener(e -> {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
@@ -273,6 +293,8 @@ public class ListCommandeForm extends BaseForm{
         Label addresseTxt = new Label("AL : "+com.getAdresse_livraison(),"NewsTopLine2");
         Label MpaiementTxt = new Label("MP : "+com.getMethode_paiement(),"NewsTopLine2" );
         Label prixTxt = new Label("prix : "+com.getPrix_commande(),"NewsTopLine2" );
+        
+        addresseTxt.getAllStyles().setFgColor(0x000000);
         
         createLineSeparator();
  

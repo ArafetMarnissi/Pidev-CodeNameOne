@@ -24,6 +24,7 @@ public class MyApplication {
     private Resources theme;
 
     public void init(Object context) {
+
         // use two network threads instead of one
         updateNetworkThreadCount(2);
 
@@ -51,7 +52,8 @@ public class MyApplication {
             current.show();
             return;
         }
-        new ListCommandeForm(theme).show();
+        //new WalkthruForm(theme).show();
+        new ListcategoryForm(theme).show();
     }
 
     public void stop() {
@@ -64,5 +66,4 @@ public class MyApplication {
     
     public void destroy() {
     }
-
 }

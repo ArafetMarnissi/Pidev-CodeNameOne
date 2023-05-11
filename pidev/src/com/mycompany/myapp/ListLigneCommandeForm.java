@@ -50,17 +50,27 @@ public class ListLigneCommandeForm extends BaseForm{
     
     Form current;
     public ListLigneCommandeForm(Resources res ,int id) {
-          super("Newsfeed",BoxLayout.y()); 
+        super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
-        current = this ;
         setToolbar(tb);
         getTitleArea().setUIID("Container");
         setTitle("Détails");
         getContentPane().setScrollVisible(false);
         
+        super.addSideMenu(res);
         
-        tb.addSearchCommand(e ->  {
-            
+                Button cartButton = new Button("");
+        cartButton.setUIID("NewsTopLine");
+        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+        cartStyle.setFgColor(0xf21f1f);
+        FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
+        tb.addCommandToRightBar("", cartIcon, e -> {
+            InfiniteProgress ip = new InfiniteProgress();
+            final Dialog ipDlg = ip.showInifiniteBlocking();
+        
+             PanierForm a = new PanierForm(res);
+             a.show();
+             refreshTheme();
         });
         
         Tabs swipe = new Tabs();
@@ -128,8 +138,6 @@ public class ListLigneCommandeForm extends BaseForm{
         mesCommandes.setUIID("SelectBar");
         RadioButton Details = RadioButton.createToggle("Details", barGroup);
         Details.setUIID("SelectBar");
-        RadioButton AjoutCommande = RadioButton.createToggle("Ajouter", barGroup);
-        AjoutCommande.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
 
 ///////////radio buuton pour afficher la liste des commandes
@@ -141,20 +149,12 @@ public class ListLigneCommandeForm extends BaseForm{
             a.show();
             refreshTheme();
         });
-/////////radio buuton pour ajouter une commande
-        AjoutCommande.addActionListener((e) -> {
-               InfiniteProgress ip = new InfiniteProgress();
-        final Dialog ipDlg = ip.showInifiniteBlocking();
-        
-          AjoutCommandeForm a = new AjoutCommandeForm(res);
-            a.show();
-            refreshTheme();
-        });
+
 
 
 
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(3, mesCommandes, Details, AjoutCommande),
+                GridLayout.encloseIn(2, mesCommandes, Details),
                 FlowLayout.encloseBottom(arrow)
         ));
 
@@ -166,7 +166,6 @@ public class ListLigneCommandeForm extends BaseForm{
         });
         bindButtonSelection(mesCommandes, arrow);
         bindButtonSelection(Details, arrow);
-        bindButtonSelection(AjoutCommande, arrow);
         
         addOrientationListener(e -> {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);

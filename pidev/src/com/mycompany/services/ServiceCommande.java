@@ -13,6 +13,8 @@ import com.codename1.io.NetworkManager;
 import com.codename1.ui.events.ActionListener;
 import com.mycompany.entities.Commande;
 import com.mycompany.entities.LigneCommande;
+import com.mycompany.entities.Produit;
+import com.mycompany.entities.SessionPanier;
 import com.mycompany.utils.Statics;
 import java.io.IOException;
 import java.text.ParseException;
@@ -53,8 +55,12 @@ public class ServiceCommande {
     
     //ajout 
     public void ajoutCommande(Commande commande) {
-        
-        String url =Statics.BASE_URL+"/apiAjouterCommande?adresse_livraison="+commande.getAdresse_livraison()+"&methode_paiement="+commande.getMethode_paiement()+"&telephone="+commande.getTelephone()+"&user_id="+1+"&produit_19=2"; 
+        String Products ="";
+        for(Produit prod :SessionPanier.getPanier().keySet()){
+        Products +="&produit_"+prod.getId()+"="+SessionPanier.getPanier().get(prod);
+        }
+        System.out.println(Products);
+        String url =Statics.BASE_URL+"/apiAjouterCommande?adresse_livraison="+commande.getAdresse_livraison()+"&methode_paiement="+commande.getMethode_paiement()+"&telephone="+commande.getTelephone()+"&user_id="+5+Products; 
         
         req.setUrl(url);
         req.addResponseListener((e) -> {
@@ -73,7 +79,7 @@ public class ServiceCommande {
     public ArrayList<Commande>affichageCommandes() {
         ArrayList<Commande> result = new ArrayList<>();
         
-        String url = Statics.BASE_URL+"/apiAffichageCommandeClient/1";
+        String url = Statics.BASE_URL+"/apiAffichageCommandeClient/5";
         req.setUrl(url);
         
         req.addResponseListener(new ActionListener<NetworkEvent>() {

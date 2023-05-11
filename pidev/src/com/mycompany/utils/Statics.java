@@ -12,5 +12,8 @@ package com.mycompany.utils;
 public class Statics {
     
     
-    public static final String BASE_URL="http://127.0.0.1:8000";//hathi url mt3 symfony 
+    public static final String BASE_URL="http://127.0.0.1:8000";
+    public static final String BASE_URL1="http://localhost/";
+    public static final String URL_REP_IMAGES = BASE_URL1 + "Pidev/Pidev/public/uploads/produits";
+    public static final String URL_REP_IMAGES_CAT = BASE_URL1 + "Pidev/Pidev/public/uploads/categorie";
 }

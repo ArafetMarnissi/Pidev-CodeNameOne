@@ -15,6 +15,7 @@ import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
@@ -47,18 +48,26 @@ public class AjoutCommandeForm extends BaseForm {
     
     Form current;
     public AjoutCommandeForm(Resources res ) {
-        super("Newsfeed",BoxLayout.y()); 
-    
+          super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
-        current = this ;
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Ajout Commande");
+        setTitle("Passer Commande");
         getContentPane().setScrollVisible(false);
         
+        super.addSideMenu(res);
+               Button cartButton = new Button("");
+        cartButton.setUIID("NewsTopLine");
+        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+        cartStyle.setFgColor(0xf21f1f);
+        FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
+        tb.addCommandToRightBar("", cartIcon, e -> {
+            InfiniteProgress ip = new InfiniteProgress();
+            final Dialog ipDlg = ip.showInifiniteBlocking();
         
-        tb.addSearchCommand(e ->  {
-            
+             PanierForm a = new PanierForm(res);
+             a.show();
+             refreshTheme();
         });
         
         Tabs swipe = new Tabs();
@@ -110,8 +119,6 @@ public class AjoutCommandeForm extends BaseForm {
         ButtonGroup barGroup = new ButtonGroup();
         RadioButton mesCommandes = RadioButton.createToggle("Mes Commandes", barGroup);
         mesCommandes.setUIID("SelectBar");
-        RadioButton Details = RadioButton.createToggle("Details", barGroup);
-        Details.setUIID("SelectBar");
         RadioButton AjoutCommande = RadioButton.createToggle("Ajouter", barGroup);
         AjoutCommande.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
@@ -138,7 +145,7 @@ public class AjoutCommandeForm extends BaseForm {
 
 
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(3, mesCommandes, Details, AjoutCommande),
+                GridLayout.encloseIn(2, mesCommandes, AjoutCommande),
                 FlowLayout.encloseBottom(arrow)
         ));
 
@@ -149,7 +156,6 @@ public class AjoutCommandeForm extends BaseForm {
             updateArrowPosition(AjoutCommande, arrow);
         });
         bindButtonSelection(mesCommandes, arrow);
-        bindButtonSelection(Details, arrow);
         bindButtonSelection(AjoutCommande, arrow);
         
         addOrientationListener(e -> {
