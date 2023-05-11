@@ -32,6 +32,9 @@ import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.layouts.Layout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
+import java.io.IOException;
+
+
 
 /**
  * Base class for the forms with common functionality
@@ -81,12 +84,38 @@ public class BaseForm extends Form {
                 FlowLayout.encloseCenterBottom(
                         new Label(res.getImage("profile-pic.jpg"), "PictureWhiteBackgrond"))
         ));
-        
-        tb.addMaterialCommandToSideMenu("Newsfeed", FontImage.MATERIAL_UPDATE, e -> new NewsfeedForm(res).show());
-        tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new ProfileForm(res).show());
+        if (SessionManager.getInstance()!=null){
+        tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_UPDATE, e -> new ProfileForm(res).show());
+        tb.addMaterialCommandToSideMenu("Activités", FontImage.MATERIAL_SETTINGS, e -> {
+            try {
+                new AffichageCoach(res).show();
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        });
         tb.addMaterialCommandToSideMenu("Mes Commandes", FontImage.MATERIAL_ALL_INBOX, e -> new ListCommandeForm(res).show());
-        tb.addMaterialCommandToSideMenu("Produit", FontImage.MATERIAL_ALL_INBOX, e -> new ProfileForm(res).show());
+        tb.addMaterialCommandToSideMenu("Abonnements", FontImage.MATERIAL_ALL_INBOX, e -> new ProfileForm(res).show());
         tb.addMaterialCommandToSideMenu("Categorie", FontImage.MATERIAL_ALL_INBOX, e -> new ListcategoryForm(res).show());
-        tb.addMaterialCommandToSideMenu("Logout", FontImage.MATERIAL_EXIT_TO_APP, e -> new WalkthruForm(res).show());
+        tb.addMaterialCommandToSideMenu("Se Déconnecter", FontImage.MATERIAL_EXIT_TO_APP, e -> {
+            SessionManager.EndSession();
+            new SignInForm(res).show();
+                });
+        
+        }
+        else{
+                tb.addMaterialCommandToSideMenu("Se Connecter", FontImage.MATERIAL_SETTINGS, e -> new SignInForm(res).show());
+        tb.addMaterialCommandToSideMenu("Activités", FontImage.MATERIAL_ALL_INBOX, e -> {
+                    try {
+                        new AffichageCoach(res).show();
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                });
+        tb.addMaterialCommandToSideMenu("Categories", FontImage.MATERIAL_ALL_INBOX, e -> new ListcategoryForm(res).show());
+        tb.addMaterialCommandToSideMenu("Abonnement", FontImage.MATERIAL_ALL_INBOX, e -> new ListcategoryForm(res).show());
+        
+        }
+            
+
     }
 }

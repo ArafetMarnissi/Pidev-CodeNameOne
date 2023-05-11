@@ -48,12 +48,13 @@ public class MyApplication {
     }
     
     public void start() {
+        SessionManager.EndSession();
              if(current != null){
             current.show();
             return;
         }
         //new WalkthruForm(theme).show();
-        new ListcategoryForm(theme).show();
+        new SignInForm(theme).show();
     }
 
     public void stop() {

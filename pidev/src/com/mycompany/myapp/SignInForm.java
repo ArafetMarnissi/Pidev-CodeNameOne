@@ -20,15 +20,21 @@
 package com.mycompany.myapp;
 
 import com.codename1.components.FloatingHint;
+import com.codename1.components.InfiniteProgress;
 import com.codename1.ui.Button;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Label;
 import com.codename1.ui.TextField;
+import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
+import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
+import com.mycompany.services.ServiceUser;
 
 /**
  * Sign in UI
@@ -36,9 +42,38 @@ import com.codename1.ui.util.Resources;
  * @author Shai Almog
  */
 public class SignInForm extends BaseForm {
-
+  
     public SignInForm(Resources res) {
-        super(new BorderLayout());
+         
+
+                //super("Newsfeed", BoxLayout.y());
+                super(new BorderLayout());
+        Toolbar tb = new Toolbar(true);
+        setToolbar(tb);
+        getTitleArea().setUIID("Container");
+        setTitle("Sign In");
+        getContentPane().setScrollVisible(false);
+        
+        super.addSideMenu(res);
+        
+        
+        Button cartButton = new Button("");
+        cartButton.setUIID("NewsTopLine");
+        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+        cartStyle.setFgColor(0xf21f1f);
+        FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
+        tb.addCommandToRightBar("", cartIcon, e -> {
+            InfiniteProgress ip = new InfiniteProgress();
+            final Dialog ipDlg = ip.showInifiniteBlocking();
+        
+             PanierForm a = new PanierForm(res);
+             a.show();
+             refreshTheme();
+        });
+         SessionManager.EndSession();
+         //SessionManager.setId(0);
+         System.out.println(SessionManager.getInstance());
+         System.out.println(SessionManager.getEmail());
         
         if(!Display.getInstance().isTablet()) {
             BorderLayout bl = (BorderLayout)getLayout();
@@ -48,9 +83,9 @@ public class SignInForm extends BaseForm {
         getTitleArea().setUIID("Container");
         setUIID("SignIn");
         
-        add(BorderLayout.NORTH, new Label(res.getImage("Logo.png"), "LogoLabel"));
+        add(BorderLayout.NORTH, new Label(res.getImage("C://Users//khali//Desktop//background.png"), "LogoLabel"));
         
-        TextField username = new TextField("", "Username", 20, TextField.ANY);
+        TextField username = new TextField("", "Email", 20, TextField.ANY);
         TextField password = new TextField("", "Password", 20, TextField.PASSWORD);
         username.setSingleLineTextArea(false);
         password.setSingleLineTextArea(false);
@@ -59,8 +94,9 @@ public class SignInForm extends BaseForm {
         signUp.addActionListener(e -> new SignUpForm(res).show());
         signUp.setUIID("Link");
         Label doneHaveAnAccount = new Label("Don't have an account?");
-        
+        Label l =new Label("");
         Container content = BoxLayout.encloseY(
+            
                 new FloatingHint(username),
                 createLineSeparator(),
                 new FloatingHint(password),
@@ -68,10 +104,19 @@ public class SignInForm extends BaseForm {
                 signIn,
                 FlowLayout.encloseCenter(doneHaveAnAccount, signUp)
         );
+        l.setUIID("l");
+        
+        
         content.setScrollableY(true);
         add(BorderLayout.SOUTH, content);
         signIn.requestFocus();
-        signIn.addActionListener(e -> new NewsfeedForm(res).show());
+        
+        
+        
+        signIn.addActionListener(e -> {
+                  ServiceUser.getInstance().signin(username, password, res);
+
+        });
     }
     
 }

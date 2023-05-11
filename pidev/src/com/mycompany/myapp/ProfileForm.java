@@ -20,13 +20,18 @@
 package com.mycompany.myapp;
 
 import com.codename1.components.ScaleImageLabel;
+import com.codename1.ui.Button;
 import com.codename1.ui.CheckBox;
+import com.codename1.ui.Command;
 import com.codename1.ui.Component;
+import static com.codename1.ui.Component.BOTTOM;
 import com.codename1.ui.Display;
+import com.codename1.ui.Form;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
@@ -34,6 +39,7 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
+import com.mycompany.services.ServiceUser;
 
 /**
  * The user profile form
@@ -68,39 +74,59 @@ public class ProfileForm extends BaseForm {
         facebook.setTextPosition(BOTTOM);
         twitter.setTextPosition(BOTTOM);
         
-        add(LayeredLayout.encloseIn(
-                sl,
-                BorderLayout.south(
-                    GridLayout.encloseIn(3, 
-                            facebook,
-                            FlowLayout.encloseCenter(
-                                new Label(res.getImage("profile-pic.jpg"), "PictureWhiteBackgrond")),
-                            twitter
-                    )
-                )
-        ));
+      
 
-        TextField username = new TextField("sandeep");
-        username.setUIID("TextFieldBlack");
-        addStringValue("Username", username);
+       
+        
 
-        TextField email = new TextField("sandeep@gmail.com", "E-Mail", 20, TextField.EMAILADDR);
+        TextField email = new TextField(SessionManager.getEmail(), "E-Mail", 20, TextField.EMAILADDR);
         email.setUIID("TextFieldBlack");
         addStringValue("E-Mail", email);
+        email.setEditable(false);
         
-        TextField password = new TextField("sandeep", "Password", 20, TextField.PASSWORD);
-        password.setUIID("TextFieldBlack");
-        addStringValue("Password", password);
+        
+        
+        
+        TextField nom = new TextField(SessionManager.getNom(), "nom");
+        nom.setUIID("TextFieldBlack");
+        addStringValue("nom", nom);
+        nom.setEditable(false);
+        
+        TextField prenom = new TextField(SessionManager.getPrenom(), "prenom");
+        prenom.setUIID("TextFieldBlack");
+        addStringValue("prenom", prenom);
+        prenom.setEditable(false);
+        
+       String status =  SessionManager.isStatus().toString();
+       String type;
+       if (status=="false")
+       {
+                      type="non vérifié";
+       }
+       else
+       {
+           type="vérifié";
+       }
+           
+        TextField hello = new TextField(type, "Etat");
+        hello.setUIID("TextFieldBlack");
+        addStringValue("Etat ", hello);
+        hello.setEditable(false);
+        
+        
+     Button boutonModifier = new Button("Modifier");
+        addStringValue("", boutonModifier);
+        boutonModifier.addPointerPressedListener(l ->   { 
 
-        CheckBox cb1 = CheckBox.createToggle(res.getImage("on-off-off.png"));
-        cb1.setUIID("Label");
-        cb1.setPressedIcon(res.getImage("on-off-on.png"));
-        CheckBox cb2 = CheckBox.createToggle(res.getImage("on-off-off.png"));
-        cb2.setUIID("Label");
-        cb2.setPressedIcon(res.getImage("on-off-on.png"));
+           if(ServiceUser.getInstance().modifierUser(SessionManager.getInstance())) { // if true
+           new ModifierUser(res,SessionManager.getInstance()).show();
+                }
+           });
         
-        addStringValue("Facebook", FlowLayout.encloseRightMiddle(cb1));
-        addStringValue("Twitter", FlowLayout.encloseRightMiddle(cb2));
+        
+        
+
+       
     }
     
     private void addStringValue(String s, Component v) {
@@ -109,3 +135,5 @@ public class ProfileForm extends BaseForm {
         add(createLineSeparator(0xeeeeee));
     }
 }
+
+

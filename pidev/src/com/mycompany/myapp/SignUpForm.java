@@ -31,6 +31,8 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.util.Resources;
+import com.mycompany.entities.User;
+import com.mycompany.services.ServiceUser;
 
 /**
  * Signup UI
@@ -49,11 +51,15 @@ public class SignUpForm extends BaseForm {
         tb.setBackCommand("", e -> previous.showBack());
         setUIID("SignIn");
                 
-        TextField username = new TextField("", "Username", 20, TextField.ANY);
+        TextField nom = new TextField("", "nom", 20, TextField.ANY);
+        TextField prenom = new TextField("", "prenom", 20, TextField.ANY);
         TextField email = new TextField("", "E-Mail", 20, TextField.EMAILADDR);
         TextField password = new TextField("", "Password", 20, TextField.PASSWORD);
         TextField confirmPassword = new TextField("", "Confirm Password", 20, TextField.PASSWORD);
-        username.setSingleLineTextArea(false);
+        email.setConstraint(TextField.EMAILADDR);
+
+        nom.setSingleLineTextArea(false);
+        prenom.setSingleLineTextArea(false);
         email.setSingleLineTextArea(false);
         password.setSingleLineTextArea(false);
         confirmPassword.setSingleLineTextArea(false);
@@ -65,9 +71,11 @@ public class SignUpForm extends BaseForm {
         
         Container content = BoxLayout.encloseY(
                 new Label("Sign Up", "LogoLabel"),
-                new FloatingHint(username),
-                createLineSeparator(),
                 new FloatingHint(email),
+                createLineSeparator(),
+                new FloatingHint(nom),
+                createLineSeparator(),
+                new FloatingHint(prenom),
                 createLineSeparator(),
                 new FloatingHint(password),
                 createLineSeparator(),
@@ -81,7 +89,12 @@ public class SignUpForm extends BaseForm {
                 FlowLayout.encloseCenter(alreadHaveAnAccount, signIn)
         ));
         next.requestFocus();
-        next.addActionListener(e -> new ActivateForm(res).show());
+        next.addActionListener((e) ->{
+            
+            ServiceUser.getInstance().signup(email, nom, prenom, password, confirmPassword, res);
+        }
+        
+        );
     }
     
 }

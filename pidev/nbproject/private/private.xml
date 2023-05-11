@@ -10,13 +10,21 @@
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/entities/LigneCommande.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/PanierForm.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/entities/Commande.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/BaseForm.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/ProfileForm.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/ajoutercategorieForm.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/Star.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/ListCommandeForm.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/AjoutCommandeForm.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/services/ServiceCommande.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/services/ProduitService.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/entities/Produit.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/Detailprod.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/modifercategorieForm.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/ModifierCommandeForm.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/ListProduit.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/ListLigneCommandeForm.java</file>
+            <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/ListcategoryForm.java</file>
             <file>file:/C:/Users/marni/OneDrive/Documents/NetBeansProjects/Pi/pidev/src/com/mycompany/myapp/MyApplication.java</file>
         </group>
     </open-files>

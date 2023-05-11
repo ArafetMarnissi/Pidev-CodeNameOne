@@ -148,21 +148,10 @@ public class PanierForm extends BaseForm{
         add(LayeredLayout.encloseIn(swipe, radioContainer));
 
         ButtonGroup barGroup = new ButtonGroup();
-        RadioButton mesCommandes = RadioButton.createToggle("Mes Commandes", barGroup);
-        mesCommandes.setUIID("SelectBar");
         RadioButton Panier = RadioButton.createToggle("Panier", barGroup);
         Panier.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
 
-///////////radio buuton pour afficher la liste des commandes
-        mesCommandes.addActionListener((e) -> {
-               InfiniteProgress ip = new InfiniteProgress();
-        final Dialog ipDlg = ip.showInifiniteBlocking();
-        
-          ListCommandeForm a = new ListCommandeForm(res);
-            a.show();
-            refreshTheme();
-        });
 
         ////panier
         Panier.addActionListener((e) -> {
@@ -177,7 +166,7 @@ public class PanierForm extends BaseForm{
 
 
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(2, mesCommandes, Panier),
+                GridLayout.encloseIn(1, Panier),
                 FlowLayout.encloseBottom(arrow)
         ));
 
@@ -187,7 +176,7 @@ public class PanierForm extends BaseForm{
             arrow.setVisible(true);
             updateArrowPosition(Panier, arrow);
         });
-        bindButtonSelection(mesCommandes, arrow);
+
         
         addOrientationListener(e -> {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
@@ -215,14 +204,26 @@ public class PanierForm extends BaseForm{
             image.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
         }
             /////////button passer commande
+        if(!SessionPanier.getPanier().isEmpty()){
         Button btnAjouter = new Button("Passer Commande");
         addStringValue("", btnAjouter);
         btnAjouter.addActionListener((e) -> {
+            if (SessionManager.getInstance()!=null){
             AjoutCommandeForm a = new AjoutCommandeForm(res);
             a.show();
             refreshTheme();
+            }
+            else{
+            SignInForm a = new SignInForm(res);
+            a.show();
+            refreshTheme();
+            
+            }
+            
+            
                });
         
+        }
         
     }
     
