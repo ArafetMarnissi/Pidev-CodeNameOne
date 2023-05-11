@@ -5,17 +5,12 @@
  */
 package com.mycompany.myapp;
 
-import com.codename1.components.ImageViewer;
 import com.codename1.components.InfiniteProgress;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Component;
-import static com.codename1.ui.Component.BOTTOM;
-import static com.codename1.ui.Component.CENTER;
-import static com.codename1.ui.Component.LEFT;
-import static com.codename1.ui.Component.RIGHT;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
@@ -27,6 +22,8 @@ import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
 import com.codename1.ui.Tabs;
+import com.codename1.ui.TextArea;
+import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.URLImage;
 import com.codename1.ui.layouts.BorderLayout;
@@ -36,26 +33,23 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
-import com.mycompany.entities.Activite;
-import com.mycompany.services.ServiceActivite;
-import com.mycompany.utils.fich;
-import java.io.IOException;
+import com.mycompany.entities.Abonnement;
+import com.mycompany.services.ServiceAbonnement;
 import java.util.ArrayList;
-
 
 /**
  *
- * @author mmarr
+ * @author saifz
  */
-public class AffichageActiviteCoach extends BaseForm{
+public class AfficheAbonnementForm extends BaseForm{
     
-      Form current;
-    public AffichageActiviteCoach(Resources res,int id) throws IOException{
-            super("Newsfeed", BoxLayout.y());
+    Form current;
+    public AfficheAbonnementForm(Resources res){
+           super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Liste des Activités par Coach");
+        setTitle("Abonnements");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
@@ -80,7 +74,7 @@ public class AffichageActiviteCoach extends BaseForm{
         
         addTab(swipe,s1, res.getImage("salle-back.jpg"),"","",res);
         
-          swipe.setUIID("Container");
+        swipe.setUIID("Container");
         swipe.getContentPane().setUIID("Container");
         swipe.hideTabs();
 
@@ -119,11 +113,11 @@ public class AffichageActiviteCoach extends BaseForm{
         add(LayeredLayout.encloseIn(swipe, radioContainer));
 
         ButtonGroup barGroup = new ButtonGroup();
-        RadioButton mesListes = RadioButton.createToggle("Les Activités", barGroup);
+        RadioButton mesListes = RadioButton.createToggle("Mes Abonnements", barGroup);
         mesListes.setUIID("SelectBar");
-        /*RadioButton liste = RadioButton.createToggle("Autres", barGroup);
-        liste.setUIID("SelectBar");*/
-        RadioButton partage = RadioButton.createToggle("Les coachs", barGroup);
+        RadioButton liste = RadioButton.createToggle("Statistique", barGroup);
+        liste.setUIID("SelectBar");
+        RadioButton partage = RadioButton.createToggle("Ajouter", barGroup);
         partage.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("arrow.png"), "Container");
 
@@ -132,34 +126,29 @@ public class AffichageActiviteCoach extends BaseForm{
                InfiniteProgress ip = new InfiniteProgress();
         final Dialog ipDlg = ip.showInifiniteBlocking();
         
-        try {
-            //  ListReclamationForm a = new ListReclamationForm(res);
-            //  a.show();
-            new AffichageCoach(res).show();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-                    refreshTheme();
-        });
-        mesListes.addActionListener((e) -> {
-               InfiniteProgress ip = new InfiniteProgress();
-        final Dialog ipDlg = ip.showInifiniteBlocking();
-        
         //  ListReclamationForm a = new ListReclamationForm(res);
           //  a.show();
-             try {
-                      new AffichageActivite(res).show();
-                  } catch (IOException ex) {
-                      System.out.println(ex.getMessage());
-                  }
+                new AjoutAbonnementForm(res).show();
                     refreshTheme();
         });
 
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(2, mesListes, partage),
+                GridLayout.encloseIn(3, mesListes, liste, partage),
                 FlowLayout.encloseBottom(arrow)
+                
+                
         ));
+        liste.addActionListener((e) -> {
+               InfiniteProgress ip = new InfiniteProgress();
+        final Dialog ipDlg = ip.showInifiniteBlocking();
 
+        //  ListReclamationForm a = new ListReclamationForm(res);
+          //  a.show();
+                new StatisticsPieForm(res).show();
+                    refreshTheme();
+        });
+        
+        
         partage.setSelected(true);
         arrow.setVisible(false);
         addShowListener(e -> {
@@ -167,32 +156,24 @@ public class AffichageActiviteCoach extends BaseForm{
             updateArrowPosition(mesListes, arrow);
         });
         bindButtonSelection(mesListes, arrow);
-       // bindButtonSelection(liste, arrow);
+        bindButtonSelection(liste, arrow);
         bindButtonSelection(partage, arrow);
         // special case for rotation
         addOrientationListener(e -> {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
         
-        ArrayList<Activite> list= ServiceActivite.getInstance().affichageactsbycoach(id);
-       
-        for(Activite a:list){
-            String urlImage="logo1.png";
+        ArrayList<Abonnement> list= ServiceAbonnement.getInstance().affichageAbonnements();
+        for(Abonnement a:list){
+            String urlImage="back-logo.jpeg";
             Image placeHolder=Image.createImage(120, 90);
             EncodedImage enc=EncodedImage.createFromImage(placeHolder, false);
             URLImage urlim=URLImage.createToStorage(enc, urlImage, urlImage, URLImage.RESIZE_SCALE);
-            addButton(urlim, a, res,urlim);
+            addButton(urlim, a, res);
             ScaleImageLabel image=new ScaleImageLabel(urlim);
             Container containerImage=new Container();
             image.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
         }
-        
-            /*Label ta22 = new Label("ce coach ne possede pas d'activité !","NewsTopLine2");
-            Container cnt=new Container(new BoxLayout(BoxLayout.Y_AXIS));
-            ta22.setAlignment(Component.CENTER);
-            cnt.add(ta22);*/
-        
-        
     }
     
         private void addTab(Tabs swipe, Label spacer ,Image image, String string, String text, Resources res) {
@@ -211,7 +192,7 @@ public class AffichageActiviteCoach extends BaseForm{
         Label overLay=new Label("","ImageOverlay");
         
         Container page1=LayeredLayout.encloseIn(imageScale,overLay,BorderLayout.south(BoxLayout.encloseY(new SpanLabel(text, "LargewhiteText"),FlowLayout.encloseIn(),spacer)));
-      swipe.addTab("", res.getImage("logo1.png"), page1);
+      swipe.addTab("", res.getImage("back-logo.jpeg"), page1);
     }
     
     public void bindButtonSelection(Button btn, Label l ){
@@ -228,114 +209,72 @@ public class AffichageActiviteCoach extends BaseForm{
         l.getParent().repaint();
     } 
     
-    private void addButton(Image img, Activite a, Resources res,Image img1) throws IOException{
-         EncodedImage enc = null;
-        try{
-        //img=Image.createImage("/C:/Users/damma/OneDrive/Bureau/testpidev/PIDEV-Golden-Gym/Pidev/public/uploads/produits/"+a.getImage_produit());
-           enc=EncodedImage.create("/rpm-mills-800x534-1-64032742659b2.jpg");
-        }catch(IOException ex){
-             ex.printStackTrace();
-        }
-        String url=fich.URL_REP_IMAGES_ACT+"/"+a.getImage();
-        // System.out.println(url);
-        Image immg=URLImage.createToStorage(enc, url, url,URLImage.RESIZE_SCALE);
-        // System.out.println(immg.toString());
-        ImageViewer imgv = new ImageViewer(Image.createImage("/rpm-mills-800x534-1-64032742659b2.jpg"));
-        imgv.setImage(immg);
-        imgv.setImage(imgv.getImage().scaled(300, 300));
-        int height = Display.getInstance().convertToPixels(13.5f);
+    private void addButton(Image img, Abonnement a, Resources res){
+        int height = Display.getInstance().convertToPixels(11.5f);
         int width = Display.getInstance().convertToPixels(14f);
-        /*Button image=new Button(img.fill(width, height));
-        image.setUIID("label");*/
-        Container cnt=BorderLayout.west(imgv);
+        Button image=new Button(img.fill(width, height));
+        image.setUIID("label");
+        Container cnt=BorderLayout.west(image);
         
-        
-        
-       /* try{
-        img1=Image.createImage("/640a0d8ad2310.png");
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }*/
-
-        Button image1=new Button(img1.fill(width, height));
-        image1.setUIID("label");
-        //Container cnt=BorderLayout.west(image);
-        Container cnt1=BorderLayout.east(image1);
-        
-       String nb = String.valueOf(a.getNbrePlace());
-        Label ta = new Label(a.getNomActivite(),"NewsTopLine2");
-        Label ta1 = new Label(a.getDescriptionActivite(),"CenterLabel");
-        Label ta2=new Label();
-        if(a.getNbrePlace()>1){
-        ta2 = new Label(nb+"  Places disponibles","CenterLabel");
-        }else{
-         ta2 = new Label(nb+"  Place disponible","CenterLabel");
-        }        //System.out.println("Activite == "+nb);
+        String nb = String.valueOf(a.getPrixAbonnement());
+        Label ta = new Label(a.getNomAbonnement(),"NewsTopLine2");
+        Label ta1 = new Label(a.getDureeAbonnement(),"NewsTopLine");
+        Label ta2 = new Label(nb,"NewsTopLine");
+        //System.out.println("Activite == "+nb);
          createLineSeparator();
-                  Button participer=new Button("Participer");
-         ArrayList<Activite> listEn= ServiceActivite.getInstance().findpartbyid(a.getId());
-         System.out.println("--------------------------------------------------");
-         System.out.println(listEn);
-         System.out.println("--------------------------------------------------");
          
-          for(Activite p:listEn){
-          if(a.getNbrePlace()!=0){    
-        if(SessionManager.getInstance()!=null){
-                            if(p.isEn()== false){
-                            participer=new Button("Participer");
-                            //cnt.add(participer);
-                       participer.addActionListener(e-> {
-                           /*boolean result= ServiceActivite.getInstance().findpartbyid(a.getId());
-                           System.out.println(result);*/
-                           ServiceActivite.getInstance().ajoutPart(a.getId());
-                                try {
-                                    new AffichageActivite(res).show();
-                                } catch (IOException ex) {
-                                    System.out.println(ex.getMessage());
-                                }
-                                  refreshTheme();
-                       });
-                            }else{
-                          participer=new Button("Annuler");
-                          //cnt.add(participer1);
-                       participer.addActionListener(e-> {
-                           /*boolean result= ServiceActivite.getInstance().findpartbyid(a.getId());
-                           System.out.println(result);*/
-                          ServiceActivite.getInstance().deletePart(p.getId_p());
-                              try {
-                                  new AffichageActivite(res).show();
-                              } catch (IOException ex) {
-                                  System.out.println(ex.getMessage());
-                              }
-                                  refreshTheme();
-                       });
-                            }
-          }else{
-         participer.addActionListener(e-> {
-                                  new SignInForm(res).show();
-                              
-                                  refreshTheme();
-                       });
-         }
-          }else{
-             participer=new Button("Pas de places");
-             participer.setEnabled(false);
-          
-          }
-          }
-         
-      
+        Label lSupprimer = new Label(" ");
+        lSupprimer.setUIID("NewsTopLine");
+        Style supprmierStyle = new Style(lSupprimer.getUnselectedStyle());
+        supprmierStyle.setFgColor(0xf21f1f);
+        
+        FontImage suprrimerImage = FontImage.createMaterial(FontImage.MATERIAL_DELETE, supprmierStyle);
+        lSupprimer.setIcon(suprrimerImage);
+        lSupprimer.setTextPosition(RIGHT);
+        
+        
+        
+        lSupprimer.addPointerPressedListener(l -> {
+            
+            Dialog dig = new Dialog("Suppression");
+            
+            if(dig.show("Suppression","Voulez vous vraiment supprimer cette abonnement ?","Annuler","Oui")) {
+                dig.dispose();
+            }
+            else {
+                dig.dispose();
+                 }
+                //n3ayto l suuprimer men service Reclamation
+                if(ServiceAbonnement.getInstance().deletAbonnement(a.getId())) {
+                    new AfficheAbonnementForm(res).show();
+                }
+           
+        });
+        
+        Label lModifier = new Label(" ");
+        lModifier.setUIID("NewsTopLine");
+        Style modifierStyle = new Style(lModifier.getUnselectedStyle());
+        modifierStyle.setFgColor(0xf7ad02);
+        
+        FontImage mFontImage = FontImage.createMaterial(FontImage.MATERIAL_MODE_EDIT, modifierStyle);
+        lModifier.setIcon(mFontImage);
+        lModifier.setTextPosition(LEFT);
+        
+        
+        lModifier.addPointerPressedListener(l -> {
+            //System.out.println("hello update");
+            new ModifierAbonnementForm(res,a).show();
+        });
         
                 cnt.add(BorderLayout.CENTER, BoxLayout.encloseY(
                 BoxLayout.encloseX(ta),
                 BoxLayout.encloseX(ta1),
-                BoxLayout.encloseX(ta2,participer)));
-                //BoxLayout.encloseX(lModifier,lSupprimer)));
+                BoxLayout.encloseX(ta2),
+                BoxLayout.encloseX(lModifier,lSupprimer)));
         
 
         
         add(cnt);
-        add(cnt1);
-    }
+    }    
     
 }

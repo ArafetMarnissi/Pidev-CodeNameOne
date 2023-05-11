@@ -70,7 +70,7 @@ public class PanierForm extends BaseForm{
         Style cartStyle = new Style(cartButton.getUnselectedStyle());
         cartStyle.setFgColor(0xf21f1f);
         FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
-        tb.addCommandToRightBar("", cartIcon, e -> {
+        tb.addCommandToRightBar(""+SessionPanier.getInstance().calculTotale(), cartIcon, e -> {
             InfiniteProgress ip = new InfiniteProgress();
             final Dialog ipDlg = ip.showInifiniteBlocking();
         
@@ -85,28 +85,7 @@ public class PanierForm extends BaseForm{
         Label s2 = new Label();
         
         addTab(swipe,s1, res.getImage("salle-back.jpg"),"","",res);
-        
-        // current user
-      /*  
-        System.out.println("user connecté id ="+ SessionManager.getId());
-        
-        
-        
-        System.out.println("user connecté username ="+ SessionManager.getUserName());
-        
-        System.out.println("user connecté password ="+ SessionManager.getPassowrd());
-        
-        System.out.println("user connecté email ="+ SessionManager.getEmail());
-        */
-        ////test de creation des produit et les ajouter dans le panier
-//        SessionPanier.getInstance();
-//        Produit p = new Produit(1, "vitam c", "description", 120, 2, "whey-63ed4d7c9c9a5.jpg");
-//        SessionPanier.getInstance().addProduct(p);
-//        System.out.println(SessionPanier.getPanier().toString());
 
-
-
-        ///////////
         
         
          swipe.setUIID("Container");
@@ -203,6 +182,8 @@ public class PanierForm extends BaseForm{
             Container containerImage=new Container();
             image.setBackgroundType(Style.BACKGROUND_IMAGE_SCALED_FILL);
         }
+
+  
             /////////button passer commande
         if(!SessionPanier.getPanier().isEmpty()){
         Button btnAjouter = new Button("Passer Commande");
@@ -375,18 +356,36 @@ public class PanierForm extends BaseForm{
                 b.show();
                 refreshTheme();}
         });
+        ///Btn Remove
+         Label BtnRemove = new Label(" ");
+        BtnRemove.setUIID("NewsTopLine");
+        Style modifierStyle3 = new Style(BtnRemove.getUnselectedStyle());
+        modifierStyle3.setFgColor(0xf7ad02);
+        
+        FontImage SuppFontImage = FontImage.createMaterial(FontImage.MATERIAL_DELETE, modifierStyle3);
+        BtnRemove.setIcon(SuppFontImage);
+        BtnRemove.setTextPosition(RIGHT);
+        
+        
+        BtnRemove.addPointerPressedListener(l -> {
+            
+                SessionPanier.getPanier().remove(a);
+                PanierForm b = new PanierForm(res);
+                b.show();
+                refreshTheme();
+        });
 
        //////////////////////////////////
         
         cnt.add(BorderLayout.CENTER,BoxLayout.encloseY(
-                /*BoxLayout.encloseX(idtxt),*/
+                
                 BoxLayout.encloseX(nomtxt,Prixlab),
                 BoxLayout.encloseX(desclab,ss),
-                BoxLayout.encloseX(quantitie,qant,BtnPlus,BtnMoins)
-               // BoxLayout.encloseX(BoxLayout.encloseX(stars),cart)
+                BoxLayout.encloseX(quantitie,qant,BtnPlus,BtnMoins,BtnRemove)
+               
+
                 
         ));
-        
        add(cnt);
     }
       private void addStringValue(String s, Component v) {

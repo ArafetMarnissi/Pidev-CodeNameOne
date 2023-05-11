@@ -249,7 +249,7 @@ public class AffichageActivite extends BaseForm {
         Label ta = new Label(a.getNomActivite(),"NewsTopLine2");
         Label ta1 = new Label(a.getDescriptionActivite(),"CenterLabel");
         Label ta2=new Label();
-        if(a.getNbrePlace()!=0){
+        if(a.getNbrePlace()>1){
         ta2 = new Label(nb+"  Places disponibles","CenterLabel");
         }else{
          ta2 = new Label(nb+"  Place disponible","CenterLabel"); 
@@ -268,6 +268,7 @@ public class AffichageActivite extends BaseForm {
          System.out.println("--------------------------------------------------");
          System.out.println(p.isEn());
          System.out.println("--------------------------------------------------");
+         if(a.getNbrePlace()!=0){
          if(SessionManager.getInstance()!=null){
                             if(p.isEn()== false){
                             participer=new Button("Participer");
@@ -304,6 +305,11 @@ public class AffichageActivite extends BaseForm {
                               
                                   refreshTheme();
                        });
+         }
+         }else{
+            participer=new Button("Pas de places");
+             participer.setEnabled(false);
+         
          }
           }
           

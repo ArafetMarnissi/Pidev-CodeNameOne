@@ -336,6 +336,12 @@ int max=5;
         cart.setTextPosition(RIGHT);
         cart.addPointerPressedListener(e -> {
             SessionPanier.getInstance().addProduct(a);
+            
+            Dialog dig = new Dialog("Confirmation");
+            
+            if(dig.show("Succées","Produit Ajouté ","Annuler","Ok")) {
+                dig.dispose();
+            }
             System.out.println(SessionPanier.getPanier().toString());
         });
        createLineSeparator();

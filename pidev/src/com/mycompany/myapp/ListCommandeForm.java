@@ -306,7 +306,7 @@ public class ListCommandeForm extends BaseForm{
         Style supprmierStyle = new Style(lSupprimer.getUnselectedStyle());
         supprmierStyle.setFgColor(0xf21f1f);
         
-        FontImage suprrimerImage = FontImage.createMaterial(FontImage.MATERIAL_DELETE, supprmierStyle);
+        FontImage suprrimerImage = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_DELETE, supprmierStyle).scaled(80, 80);
         lSupprimer.setIcon(suprrimerImage);
         lSupprimer.setTextPosition(RIGHT);
         
@@ -334,7 +334,7 @@ public class ListCommandeForm extends BaseForm{
         Style modifierStyle = new Style(lModifier.getUnselectedStyle());
         modifierStyle.setFgColor(0xf7ad02);
         
-        FontImage mFontImage = FontImage.createMaterial(FontImage.MATERIAL_MODE_EDIT, modifierStyle);
+        FontImage mFontImage = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_MODE_EDIT, modifierStyle).scaled(80, 80);
         lModifier.setIcon(mFontImage);
         lModifier.setTextPosition(RIGHT);
         
@@ -351,7 +351,7 @@ public class ListCommandeForm extends BaseForm{
         Style detailsStyle = new Style(lDetais.getUnselectedStyle());
         detailsStyle.setFgColor(0xf7ad02);
         
-        FontImage DFontImage = FontImage.createMaterial(FontImage.MATERIAL_INFO, detailsStyle);
+        FontImage DFontImage = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_INFO, detailsStyle).scaled(80, 80);
         lDetais.setIcon(DFontImage);
         lDetais.setTextPosition(LEFT);
         

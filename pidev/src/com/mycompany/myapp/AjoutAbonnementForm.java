@@ -10,8 +10,10 @@ import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
-import com.codename1.ui.ComboBox;
 import com.codename1.ui.Component;
+import static com.codename1.ui.Component.BOTTOM;
+import static com.codename1.ui.Component.CENTER;
+import static com.codename1.ui.Component.LEFT;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
@@ -31,33 +33,27 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
-
-import com.mycompany.entities.Commande;
-import com.mycompany.entities.SessionPanier;
-import com.mycompany.services.ServiceCommande;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Vector;
+import com.mycompany.entities.Abonnement;
+import com.mycompany.services.ServiceAbonnement;
 
 /**
  *
- * @author Lenovo
+ * @author saifz
  */
-public class AjoutCommandeForm extends BaseForm {
-    
-    
+public class AjoutAbonnementForm extends BaseForm {
     Form current;
-    public AjoutCommandeForm(Resources res ) {
-          super("Newsfeed", BoxLayout.y());
+    public AjoutAbonnementForm(Resources res ) {
+            super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Passer Commande");
+        setTitle("Ajouter Abonnement");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
-               Button cartButton = new Button("");
+        
+        
+        Button cartButton = new Button("");
         cartButton.setUIID("NewsTopLine");
         Style cartStyle = new Style(cartButton.getUnselectedStyle());
         cartStyle.setFgColor(0xf21f1f);
@@ -117,79 +113,65 @@ public class AjoutCommandeForm extends BaseForm {
 
         Component.setSameSize(radioContainer, s1, s2);
         add(LayeredLayout.encloseIn(swipe, radioContainer));
+
         ButtonGroup barGroup = new ButtonGroup();
-        RadioButton mesCommandes = RadioButton.createToggle("Mes Commandes", barGroup);
-        mesCommandes.setUIID("SelectBar");
-        RadioButton AjoutCommande = RadioButton.createToggle("Ajouter", barGroup);
-        AjoutCommande.setUIID("SelectBar");
+        RadioButton mesListes = RadioButton.createToggle("Mes Abonnements", barGroup);
+        mesListes.setUIID("SelectBar");
+        RadioButton liste = RadioButton.createToggle("Autres", barGroup);
+        liste.setUIID("SelectBar");
+        RadioButton partage = RadioButton.createToggle("Ajouterr", barGroup);
+        partage.setUIID("SelectBar");
         Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
 
-///////////radio buuton pour afficher la liste des commandes
-        mesCommandes.addActionListener((e) -> {
+
+        mesListes.addActionListener((e) -> {
                InfiniteProgress ip = new InfiniteProgress();
         final Dialog ipDlg = ip.showInifiniteBlocking();
+        new AfficheAbonnementForm(res).show();
+
         
-          ListCommandeForm a = new ListCommandeForm(res);
-            a.show();
+        //  ListReclamationForm a = new ListReclamationForm(res);
+          //  a.show();
             refreshTheme();
         });
-/////////radio buuton pour ajouter une commande
-        AjoutCommande.addActionListener((e) -> {
-               InfiniteProgress ip = new InfiniteProgress();
-        final Dialog ipDlg = ip.showInifiniteBlocking();
-        
-          AjoutCommandeForm a = new AjoutCommandeForm(res);
-            a.show();
-            refreshTheme();
-        });
-
-
 
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(2, mesCommandes, AjoutCommande),
+                GridLayout.encloseIn(3, mesListes, liste, partage),
                 FlowLayout.encloseBottom(arrow)
         ));
 
-        AjoutCommande.setSelected(true);
+        partage.setSelected(true);
         arrow.setVisible(false);
         addShowListener(e -> {
             arrow.setVisible(true);
-            updateArrowPosition(AjoutCommande, arrow);
+            updateArrowPosition(partage, arrow);
         });
-        bindButtonSelection(mesCommandes, arrow);
-        bindButtonSelection(AjoutCommande, arrow);
-        
+        bindButtonSelection(mesListes, arrow);
+        bindButtonSelection(liste, arrow);
+        bindButtonSelection(partage, arrow);
+        // special case for rotation
         addOrientationListener(e -> {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
+
         
         //
         
       
-        TextField adresse_livraison = new TextField("", "entrer l adreese de livraison!!");
-        adresse_livraison.setUIID("TextFieldBlack");
-        addStringValue("adresse_livraison",adresse_livraison);
+        TextField nomAbonnement = new TextField("", "entrer nomAbonnement!!");
+        nomAbonnement.setUIID("TextFieldBlack");
+        addStringValue("nomAbonnement",nomAbonnement);
+        
+        TextField prixAbonnement = new TextField("", "entrer prixAbonnement!!");
+        prixAbonnement.setUIID("TextFieldBlack");
+        addStringValue("prixAbonnement",prixAbonnement);
         
         
-        Vector<String> vectorPaiement;
-        vectorPaiement = new Vector();
+        TextField dureeAbonnement = new TextField("", "entrer dureeAbonnement!!");
+        dureeAbonnement.setUIID("TextFieldBlack");
+        addStringValue("dureeAbonnement",dureeAbonnement);
         
-        vectorPaiement.add("à la livraison");
-        vectorPaiement.add("chèque");
-        vectorPaiement.add("carte bancaire");
         
-        ComboBox<String>methode_paiement = new ComboBox<>(vectorPaiement);
-        methode_paiement.setUIID("TextFieldBlack");
-       addStringValue("methode_paiement",methode_paiement);
-    /*     TextField methode_paiement = new TextField("", "entrer la methode de paiement!!");
-        methode_paiement.setUIID("TextFieldBlack");
-        addStringValue("methode_paiement",methode_paiement);
-    */    
-        TextField telephone = new TextField("", "entrer votre numero de telephone",8,TextField.NUMERIC);
-        telephone.setUIID("TextFieldBlack");
-        addStringValue("telephone",telephone);
-        
-        //////////
         Button btnAjouter = new Button("Ajouter");
         addStringValue("", btnAjouter);
         
@@ -201,49 +183,41 @@ public class AjoutCommandeForm extends BaseForm {
             
             try {
                 
-                //int tel = Integer.parseInt(telephone.getText());
-                if(adresse_livraison.getText().equals("") || telephone.getText().equals("")) {
+                if(nomAbonnement.getText().equals("") || dureeAbonnement.getText().equals("")) {
                     Dialog.show("Veuillez vérifier les données","","Annuler", "OK");
-                 
-                }else{
-                    if (telephone.getText().length() != 8) {
-                    Dialog.show("Numéro de téléphone invalide", "", "Annuler", "OK");
-                    }
-                
-                
+                }
                 
                 else {
-                    InfiniteProgress ip = new InfiniteProgress();; 
+                    InfiniteProgress ip = new InfiniteProgress();; //Loading  after insert data
                 
                     final Dialog iDialog = ip.showInfiniteBlocking();
                     
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                     
                     
-                    Commande c = new Commande(
-                            format.format(new Date()),
-                            String.valueOf(adresse_livraison.getText()).toString(),
-                            100,
-                            String.valueOf(methode_paiement.getSelectedItem()),
-                           Integer.parseInt( telephone.getText())
-                    );
-                    
-                    System.out.println("data  commande == "+c.toString());
-                    
-                    
-                     
-                    ServiceCommande.getInstance().ajoutCommande(c);
-                    SessionPanier.EndSession();
-                    
-                    iDialog.dispose(); 
+                    //njibo iduser men session (current user)
+                    Abonnement r = new Abonnement(String.valueOf(nomAbonnement.getText()
+                                  ).toString(),
+                                    Float.parseFloat(prixAbonnement.getText()),
+                                    String.valueOf(dureeAbonnement.getText()
+                                  ).toString()                            
+                                  );
+                    System.out.println("data Activite == "+r);
                     
                     
-                    new ListCommandeForm(res).show();
+                    
+                    
+                    //appelle methode ajouterReclamation mt3 service Reclamation bch nzido données ta3na fi base 
+                    ServiceAbonnement.getInstance().ajoutAbonnement(r);
+                    
+                    iDialog.dispose(); //na7io loading ba3d ma3mlna ajout
+                    
+                    //ba3d ajout net3adaw lel ListREclamationForm
+                    //new ListAbonnementForm(res).show();
                     
                     
                     refreshTheme();//Actualisation
                             
-                }}
+                }
                 
             }catch(Exception ex ) {
                 ex.printStackTrace();
@@ -297,7 +271,7 @@ public class AjoutCommandeForm extends BaseForm {
                     )
                 );
         
-        swipe.addTab("",res.getImage("salle-back.jpg"), page1);
+        swipe.addTab("",res.getImage("back-logo.jpeg"), page1);
         
         
         
@@ -320,8 +294,5 @@ public class AjoutCommandeForm extends BaseForm {
         l.getUnselectedStyle().setMargin(LEFT, btn.getX() + btn.getWidth()  / 2  - l.getWidth() / 2 );
         l.getParent().repaint();
     }
-    
-   
-   
     
 }

@@ -18,6 +18,7 @@ import com.codename1.util.regex.RE;
 import com.mycompany.entities.User;
 import com.mycompany.myapp.ProfileForm;
 import com.mycompany.myapp.ConfrimAccountForm;
+import com.mycompany.myapp.ListcategoryForm;
 import com.mycompany.myapp.NewsfeedForm;
 import com.mycompany.myapp.SessionManager;
 import com.mycompany.myapp.SignInForm;
@@ -133,7 +134,7 @@ return pattern.match(emailAddress);
 
                     }
                     if (user.size() > 0 && SessionManager.isStatus().equals("true")) {
-                        new NewsfeedForm(rs).show();
+                        new ListcategoryForm(rs).show();
 
                     }
                 }

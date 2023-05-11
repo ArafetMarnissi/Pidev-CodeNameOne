@@ -86,7 +86,7 @@ public class BaseForm extends Form {
         ));
         if (SessionManager.getInstance()!=null){
         tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_UPDATE, e -> new ProfileForm(res).show());
-        tb.addMaterialCommandToSideMenu("Activités", FontImage.MATERIAL_SETTINGS, e -> {
+        tb.addMaterialCommandToSideMenu("Activités", FontImage.MATERIAL_ALL_INBOX, e -> {
             try {
                 new AffichageCoach(res).show();
             } catch (IOException ex) {
@@ -95,7 +95,7 @@ public class BaseForm extends Form {
         });
         tb.addMaterialCommandToSideMenu("Mes Commandes", FontImage.MATERIAL_ALL_INBOX, e -> new ListCommandeForm(res).show());
         tb.addMaterialCommandToSideMenu("Mes Participations", FontImage.MATERIAL_ALL_INBOX, e -> new MesParticipationForm(res).show());
-        tb.addMaterialCommandToSideMenu("Abonnements", FontImage.MATERIAL_ALL_INBOX, e -> new ProfileForm(res).show());
+        tb.addMaterialCommandToSideMenu("Abonnements", FontImage.MATERIAL_ALL_INBOX, e -> new AfficheAbonnementForm(res).show());
         tb.addMaterialCommandToSideMenu("Categorie", FontImage.MATERIAL_ALL_INBOX, e -> new ListcategoryForm(res).show());
         tb.addMaterialCommandToSideMenu("Se Déconnecter", FontImage.MATERIAL_EXIT_TO_APP, e -> {
             SessionManager.EndSession();
@@ -104,7 +104,7 @@ public class BaseForm extends Form {
         
         }
         else{
-                tb.addMaterialCommandToSideMenu("Se Connecter", FontImage.MATERIAL_SETTINGS, e -> new SignInForm(res).show());
+                tb.addMaterialCommandToSideMenu("Se Connecter", FontImage.MATERIAL_LOGIN, e -> new SignInForm(res).show());
         tb.addMaterialCommandToSideMenu("Activités", FontImage.MATERIAL_ALL_INBOX, e -> {
                     try {
                         new AffichageCoach(res).show();
@@ -113,7 +113,7 @@ public class BaseForm extends Form {
                     }
                 });
         tb.addMaterialCommandToSideMenu("Categories", FontImage.MATERIAL_ALL_INBOX, e -> new ListcategoryForm(res).show());
-        tb.addMaterialCommandToSideMenu("Abonnement", FontImage.MATERIAL_ALL_INBOX, e -> new ListcategoryForm(res).show());
+        tb.addMaterialCommandToSideMenu("Abonnement", FontImage.MATERIAL_ALL_INBOX, e -> new AfficheAbonnementForm(res).show());
         
         }
             

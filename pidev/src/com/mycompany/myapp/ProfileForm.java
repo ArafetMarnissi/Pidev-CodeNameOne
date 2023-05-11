@@ -19,16 +19,26 @@
 
 package com.mycompany.myapp;
 
+import com.codename1.components.InfiniteProgress;
 import com.codename1.components.ScaleImageLabel;
+import com.codename1.components.SpanLabel;
 import com.codename1.ui.Button;
+import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.CheckBox;
 import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import static com.codename1.ui.Component.BOTTOM;
+import static com.codename1.ui.Component.CENTER;
+import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
+import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
+import com.codename1.ui.RadioButton;
+import com.codename1.ui.Tabs;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.events.ActionEvent;
@@ -40,6 +50,8 @@ import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.util.Resources;
 import com.mycompany.services.ServiceUser;
+import java.io.IOException;
+
 
 /**
  * The user profile form
@@ -49,19 +61,32 @@ import com.mycompany.services.ServiceUser;
 public class ProfileForm extends BaseForm {
 
     public ProfileForm(Resources res) {
-        super("Newsfeed", BoxLayout.y());
-        Toolbar tb = new Toolbar(true);
-        setToolbar(tb);
-        getTitleArea().setUIID("Container");
-        setTitle("Profile");
-        getContentPane().setScrollVisible(false);
-        
-        super.addSideMenu(res);
-        
-        tb.addSearchCommand(e -> {});
-        
-        
-        Image img = res.getImage("profile-background.jpg");
+          super("Newsfeed", BoxLayout.y());
+//        Toolbar tb = new Toolbar(true);
+//        setToolbar(tb);
+//        getTitleArea().setUIID("Container");
+//        setTitle("Mon Profil");
+//        getContentPane().setScrollVisible(false);
+//        
+//        super.addSideMenu(res);
+//        
+//        
+//        Button cartButton = new Button("");
+//        cartButton.setUIID("NewsTopLine");
+//        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+//        cartStyle.setFgColor(0xf21f1f);
+//        FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
+//        tb.addCommandToRightBar("", cartIcon, e -> {
+//            InfiniteProgress ip = new InfiniteProgress();
+//            final Dialog ipDlg = ip.showInifiniteBlocking();
+//        
+//             PanierForm a = new PanierForm(res);
+//             a.show();
+//             refreshTheme();
+//        });
+
+
+        Image img = res.getImage("salle-back.jpg");
         if(img.getHeight() > Display.getInstance().getDisplayHeight() / 3) {
             img = img.scaledHeight(Display.getInstance().getDisplayHeight() / 3);
         }
@@ -84,7 +109,9 @@ public class ProfileForm extends BaseForm {
         addStringValue("E-Mail", email);
         email.setEditable(false);
         
-        
+        Label l1=new Label(" ");
+        Label l3=new Label(" ");
+        Label l2=new Label(" ");
         
         
         TextField nom = new TextField(SessionManager.getNom(), "nom");
@@ -122,6 +149,18 @@ public class ProfileForm extends BaseForm {
            new ModifierUser(res,SessionManager.getInstance()).show();
                 }
            });
+        Button Retour = new Button("Retour");
+        addStringValue("", Retour);
+        Retour.addPointerPressedListener(l ->   { 
+
+           
+              try {
+                  new AffichageActivite(res).show();
+              } catch (IOException ex) {
+                  System.out.println(ex.getMessage());
+              }
+                
+           });
         
         
         
@@ -134,6 +173,9 @@ public class ProfileForm extends BaseForm {
                 add(BorderLayout.CENTER, v));
         add(createLineSeparator(0xeeeeee));
     }
+    
+    
+   
 }
 
 
