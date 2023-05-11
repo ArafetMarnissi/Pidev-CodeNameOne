@@ -94,6 +94,7 @@ public class BaseForm extends Form {
             }
         });
         tb.addMaterialCommandToSideMenu("Mes Commandes", FontImage.MATERIAL_ALL_INBOX, e -> new ListCommandeForm(res).show());
+        tb.addMaterialCommandToSideMenu("Mes Participations", FontImage.MATERIAL_ALL_INBOX, e -> new MesParticipationForm(res).show());
         tb.addMaterialCommandToSideMenu("Abonnements", FontImage.MATERIAL_ALL_INBOX, e -> new ProfileForm(res).show());
         tb.addMaterialCommandToSideMenu("Categorie", FontImage.MATERIAL_ALL_INBOX, e -> new ListcategoryForm(res).show());
         tb.addMaterialCommandToSideMenu("Se Déconnecter", FontImage.MATERIAL_EXIT_TO_APP, e -> {

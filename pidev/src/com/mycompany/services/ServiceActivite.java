@@ -13,6 +13,7 @@ import com.codename1.io.NetworkManager;
 import com.codename1.ui.events.ActionListener;
 import com.mycompany.entities.Activite;
 import com.mycompany.entities.Coach;
+import com.mycompany.entities.Participation;
 import com.mycompany.myapp.SessionManager;
 import com.mycompany.utils.fich;
 import java.io.IOException;
@@ -367,4 +368,60 @@ public class ServiceActivite {
     return resultOk;
         
     }
+         
+        public ArrayList<Participation> affichageParts(){
+         ArrayList<Participation> result = new ArrayList<>();
+
+
+        String url = fich.BASE_URL+"/affichageParticipationUserMobile2/"+SessionManager.getId();
+        req.setUrl(url);
+
+        req.addResponseListener(new ActionListener<NetworkEvent>(){
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                    JSONParser jsonp;
+                    jsonp = new JSONParser();
+                   
+
+                    try {
+                        Map<String,Object>mapcategory = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
+                        System.out.println(mapcategory);
+                        List<Map<String,Object>> listofmap = (List<Map<String,Object>>) mapcategory.get("root");
+                        System.out.println("????????????????????????????????????");
+//                       System.out.println(mapcategory.get("dateParticipation").toString());
+                        System.out.println("????????????????????????????????????");
+                        for(Map<String,Object>obj:listofmap){
+                       Participation a = new Participation();
+                       /*float id = Float.parseFloat(obj.get("id").toString());
+                       String nomActivite = obj.get("nomAcitivite").toString();
+                       String descriptionActivite = obj.get("descriptionActivite").toString();
+                       float nbrePlace = Float.parseFloat(obj.get("nbrePlace").toString());
+                       String Image = obj.get("Image").toString();*/
+                       String d = obj.get("dateParticipation").toString();
+                       float id = Float.parseFloat(obj.get("id").toString());
+                     // String qr = mapcategory.get("qr").toString();
+                      //String Image = mapcategory.get("Image").toString();
+                       
+                        a.setId((int)id);
+//                       a.setNomActivite(nomActivite);
+//                       a.setDescriptionActivite(descriptionActivite);
+//                       a.setnbrePlace((int)nbrePlace);
+//                       a.setImage(Image);*/
+                      a.setDateParticipation(d);
+                       //a.setQrcode(qr);
+                       //a.setImage(Image);
+                       //a.setId_p((int)id1);
+                       
+                       result.add(a);
+                       }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+        }
+
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return result;
+    } 
 }

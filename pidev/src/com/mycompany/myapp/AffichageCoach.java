@@ -54,17 +54,28 @@ public class AffichageCoach extends BaseForm{
     
         Form current;
     public AffichageCoach(Resources res) throws IOException{
-    super("Newsfeed",BoxLayout.y());
-        
+            super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
-        current = this;
         setToolbar(tb);
-        getTitleArea().setUIID("container");
-        //setTitle("Ajout Activite");
+        getTitleArea().setUIID("Container");
+        setTitle("Coachs");
         getContentPane().setScrollVisible(false);
         
-        tb.addSearchCommand(e -> {
-            
+        super.addSideMenu(res);
+        
+        
+        Button cartButton = new Button("");
+        cartButton.setUIID("NewsTopLine");
+        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+        cartStyle.setFgColor(0xf21f1f);
+        FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
+        tb.addCommandToRightBar("", cartIcon, e -> {
+            InfiniteProgress ip = new InfiniteProgress();
+            final Dialog ipDlg = ip.showInifiniteBlocking();
+        
+             PanierForm a = new PanierForm(res);
+             a.show();
+             refreshTheme();
         });
         Tabs swipe = new Tabs();
         Label s1 = new Label();

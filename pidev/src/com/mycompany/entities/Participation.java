@@ -14,7 +14,7 @@ package com.mycompany.entities;
 public class Participation {
     
      private int id,id_u;
-    //private Date dateParticipation;
+    private String dateParticipation;
     private Activite activite;
 
     public Participation() {
@@ -48,6 +48,15 @@ public class Participation {
         this.id = id;
     }
 
+    public String getDateParticipation() {
+        return dateParticipation;
+    }
+
+    public void setDateParticipation(String dateParticipation) {
+        this.dateParticipation = dateParticipation;
+    }
+
+    
     public int getId_u() {
         return id_u;
     }

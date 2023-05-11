@@ -51,17 +51,28 @@ public class AffichageActivite extends BaseForm {
     
     Form current;
     public AffichageActivite(Resources res) throws IOException{
-    super("Newsfeed",BoxLayout.y());
-        
+            super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
-        current = this;
         setToolbar(tb);
-        getTitleArea().setUIID("container");
-        //setTitle("Ajout Activite");
+        getTitleArea().setUIID("Container");
+        setTitle("Activités");
         getContentPane().setScrollVisible(false);
         
-        tb.addSearchCommand(e -> {
-            
+        super.addSideMenu(res);
+        
+        
+        Button cartButton = new Button("");
+        cartButton.setUIID("NewsTopLine");
+        Style cartStyle = new Style(cartButton.getUnselectedStyle());
+        cartStyle.setFgColor(0xf21f1f);
+        FontImage cartIcon = (FontImage) FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, cartStyle).scaled(100, 100);
+        tb.addCommandToRightBar("", cartIcon, e -> {
+            InfiniteProgress ip = new InfiniteProgress();
+            final Dialog ipDlg = ip.showInifiniteBlocking();
+        
+             PanierForm a = new PanierForm(res);
+             a.show();
+             refreshTheme();
         });
         Tabs swipe = new Tabs();
         Label s1 = new Label();
@@ -246,7 +257,8 @@ public class AffichageActivite extends BaseForm {
         
         //System.out.println("Activite == "+nb);
          createLineSeparator();
-         Button participer=new Button();
+         
+         Button participer=new Button("Participer");
          ArrayList<Activite> listEn= ServiceActivite.getInstance().findpartbyid(a.getId());
          System.out.println("--------------------------------------------------");
          System.out.println(listEn);
@@ -256,85 +268,46 @@ public class AffichageActivite extends BaseForm {
          System.out.println("--------------------------------------------------");
          System.out.println(p.isEn());
          System.out.println("--------------------------------------------------");
-              if(p.isEn()== false){
-              participer=new Button("Participer");
-              //cnt.add(participer);
+         if(SessionManager.getInstance()!=null){
+                            if(p.isEn()== false){
+                            participer=new Button("Participer");
+                            //cnt.add(participer);
+                       participer.addActionListener(e-> {
+                           /*boolean result= ServiceActivite.getInstance().findpartbyid(a.getId());
+                           System.out.println(result);*/
+                           ServiceActivite.getInstance().ajoutPart(a.getId());
+                                try {
+                                    new AffichageActivite(res).show();
+                                } catch (IOException ex) {
+                                    System.out.println(ex.getMessage());
+                                }
+                                  refreshTheme();
+                       });
+                            }else{
+                          participer=new Button("Annuler");
+                          //cnt.add(participer1);
+                       participer.addActionListener(e-> {
+                           /*boolean result= ServiceActivite.getInstance().findpartbyid(a.getId());
+                           System.out.println(result);*/
+                          ServiceActivite.getInstance().deletePart(p.getId_p());
+                              try {
+                                  new AffichageActivite(res).show();
+                              } catch (IOException ex) {
+                                  System.out.println(ex.getMessage());
+                              }
+                                  refreshTheme();
+                       });
+                            }
+          }else{
          participer.addActionListener(e-> {
-             /*boolean result= ServiceActivite.getInstance().findpartbyid(a.getId());
-             System.out.println(result);*/
-             ServiceActivite.getInstance().ajoutPart(a.getId());
-                  try {
-                      new AffichageActivite(res).show();
-                  } catch (IOException ex) {
-                      System.out.println(ex.getMessage());
-                  }
-                    refreshTheme();
-         });
-              }else{
-            participer=new Button("Annuler");
-            //cnt.add(participer1);
-         participer.addActionListener(e-> {
-             /*boolean result= ServiceActivite.getInstance().findpartbyid(a.getId());
-             System.out.println(result);*/
-            ServiceActivite.getInstance().deletePart(p.getId_p());
-                try {
-                    new AffichageActivite(res).show();
-                } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
-                }
-                    refreshTheme();
-         });
-              }
+                                  new SignInForm(res).show();
+                              
+                                  refreshTheme();
+                       });
+         }
           }
           
-         /*Button participer=new Button("Participer");
-         participer.addActionListener(e-> {
-             /*boolean result= ServiceActivite.getInstance().findpartbyid(a.getId());
-             System.out.println(result);*/
-         //});
-         
-       /* Label lSupprimer = new Label(" ");
-        lSupprimer.setUIID("NewsTopLine");
-        Style supprmierStyle = new Style(lSupprimer.getUnselectedStyle());
-        supprmierStyle.setFgColor(0xf21f1f);
-        
-        FontImage suprrimerImage = FontImage.createMaterial(FontImage.MATERIAL_DELETE, supprmierStyle);
-        lSupprimer.setIcon(suprrimerImage);
-        lSupprimer.setTextPosition(RIGHT);
-        
-        
-        
-        lSupprimer.addPointerPressedListener(l -> {
-            
-            Dialog dig = new Dialog("Suppression");
-            
-            if(dig.show("Suppression","Voulez vous vraiment supprimer cette activité ?","Annuler","Oui")) {
-                dig.dispose();
-            }
-            else {
-                dig.dispose();
-                 }
-                //n3ayto l suuprimer men service Reclamation
-                if(ServiceActivite.getInstance().deleteActivite(a.getId())) {
-                    new AffichageActivite(res).show();
-                }
-           
-        });
-        
-        Label lModifier = new Label(" ");
-        lModifier.setUIID("NewsTopLine");
-        Style modifierStyle = new Style(lModifier.getUnselectedStyle());
-        modifierStyle.setFgColor(0xf7ad02);
-        
-        FontImage mFontImage = FontImage.createMaterial(FontImage.MATERIAL_MODE_EDIT, modifierStyle);
-        lModifier.setIcon(mFontImage);
-        lModifier.setTextPosition(LEFT);
-        
-        
-        lModifier.addPointerPressedListener(l -> {
-            //System.out.println("hello update");
-            new ModifierActivite(res,a).show();
-        });*/
+
         
                 cnt.add(BorderLayout.CENTER, BoxLayout.encloseY(
                 BoxLayout.encloseX(ta),
